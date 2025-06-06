@@ -13,3 +13,4 @@ Faker
 pytest-cov
 whitenoise
 django-extensions
+django-celery-beat
