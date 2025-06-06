@@ -2,6 +2,7 @@ from os import getenv, path
 from pathlib import Path
 
 from dotenv import load_dotenv
+from loguru import logger
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
@@ -26,17 +27,19 @@ DJANGO_APPS = [
     "django.contrib.sites",
     "django.contrib.humanize",
 ]
-PROJECT_APPS = ["apps.common", "apps.auth_user", "apps.user_profile"]
+PROJECT_APPS = ["apps.common", "apps.user_auth", "apps.user_profile"]
 THIRD_PARTY_APPS = [
     "rest_framework",
     "django_countries",
-    "phone_number_fields",
+    "phonenumber_field",
     "drf_spectacular",
     "djoser",
+    "cloudinary",
     "cloudinary",
     "djcelery_email",
     "django_celery_beat",
 ]
+
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
@@ -122,3 +125,32 @@ STATIC_ROOT = str(BASE_DIR / "staticfiles")
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+LOGGING_CONFIG = None
+LOGURU_LOGGING = {
+    "handlers": [
+        {
+            "sink": BASE_DIR / "logs/debug.log",
+            "level": "DEBUG",
+            "filter": lambda record: record["level"].no <= logger.level("WARNING"),
+            "format": "{time:YYYY-MM-DD HH:mm:ss.SSSS} | {level: <8} | {name}:{function}:{line} - {message}",
+            "rotation": "10MB",
+            "retention": "30 days",
+            "compression": "zip",
+        },
+        {
+            "sink": BASE_DIR / "logs/error.log",
+            "level": "ERROR",
+            "format": "{time:YYYY-MM-DD HH:mm:ss.SSSS} | {level: <8} | {name}:{function}:{line} - {message}",
+            "rotation": "10MB",
+            "retention": "30 days",
+            "compression": "zip",
+            "backtrace": True,
+            "diagnose": True,
+        },
+    ]
+}
+
+logger.configure(**LOGURU_LOGGING)
+LOGGING = {"version": 1}

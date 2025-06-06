@@ -1,0 +1,15 @@
+-r base.txt
+
+psycopg2-binary
+
+flake8
+black
+isort
+watchfiles
+
+pytest-django
+pytest-factoryboy
+Faker
+pytest-cov
+whitenoise
+django-extensions
