@@ -8,9 +8,12 @@ from loguru import logger
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 APPS_DIRS = BASE_DIR / "apps"
 
-local_env_file = path.join(BASE_DIR, ".ven", ".env.local")
+# Load environment variables from .env.local if it exists
+local_env_file = path.join(BASE_DIR, ".env", ".env.local")
 if path.isfile(local_env_file):
     load_dotenv(local_env_file)
+else:
+    logger.warning(f".env.local file not found at {local_env_file}")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -76,8 +79,12 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": getenv("POSTGRES_DB"),
+        "USER": getenv("POSTGRES_USER"),
+        "PASSWORD": getenv("POSTGRES_PASSWORD"),
+        "HOST": getenv("POSTGRES_HOST"),
+        "PORT": getenv("POSTGRES_PORT"),
     }
 }
 
@@ -132,7 +139,7 @@ LOGURU_LOGGING = {
         {
             "sink": BASE_DIR / "logs/debug.log",
             "level": "DEBUG",
-            "filter": lambda record: record["level"].no <= logger.level("WARNING"),
+            "filter": lambda record: record["level"].no <= logger.level("WARNING").no,
             "format": "{time:YYYY-MM-DD HH:mm:ss.SSSS} | {level: <8} | {name}:{function}:{line} - {message}",
             "rotation": "10MB",
             "retention": "30 days",
@@ -152,6 +159,7 @@ LOGURU_LOGGING = {
 }
 
 logger.configure(**LOGURU_LOGGING)
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,

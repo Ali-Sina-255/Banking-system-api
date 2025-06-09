@@ -1,1 +1,38 @@
 9k=M4GZC~4at
+
+
+log_dir = BASE_DIR / "logs"
+log_dir.mkdir(parents=True, exist_ok=True)  # Create log directory if not exists
+
+LOGURU_LOGGING = {
+    "handlers": [
+        {
+            "sink": log_dir / "debug.log",
+            "level": "DEBUG",
+            "filter": lambda record: record["level"].no <= logger.level("WARNING"),
+            "format": "{time:YYYY-MM-DD HH:mm:ss.SSSS} | {level: <8} | {name}:{function}:{line} - {message}",
+            "rotation": "10MB",
+            "retention": "30 days",
+            "compression": "zip",
+        },
+        {
+            "sink": log_dir / "error.log",
+            "level": "ERROR",
+            "format": "{time:YYYY-MM-DD HH:mm:ss.SSSS} | {level: <8} | {name}:{function}:{line} - {message}",
+            "rotation": "10MB",
+            "retention": "30 days",
+            "compression": "zip",
+            "backtrace": True,
+            "diagnose": True,
+        },
+    ]
+}
+
+logger.configure(**LOGURU_LOGGING)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"loguru": {"class": "interceptor.InterceptHandler"}},
+    "root": {"handlers": ["loguru"], "level": "DEBUG"},
+}
