@@ -2,8 +2,8 @@
 .idea
 .DS_Stor
 staticfile/
-.envs/*
-!.envs/.env.example
+.env/*
+!.env/.env.example
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -12,8 +12,8 @@ __pycache__/
 
 /staticfile/
 /mediafile/
-.envs/*
-!.envs/.local/
+.env/*
+!.env/.local/
 # C extensions
 *.so
 dj-venv/

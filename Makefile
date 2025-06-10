@@ -11,6 +11,9 @@ down:
 down-v:
 	docker compose -f local.yml down -v
 
+banker-config:
+	docker compose -f local.yml config
+	
 show-logs:
 	docker compose -f local.yml logs
 
@@ -29,11 +32,16 @@ collectstatic:
 superuser:
 	docker compose -f local.yml run --rm api python manage.py createsuperuser
 
+flash:
+    docker compose -f local.yml run --rm api python manage.py flash
 volume:
 	docker volume inspect author-havin-clone-api_local_postgres_data
 
-authors-db:
-	docker compose -f local.yml exec postgres psql --username=adminroot --dbname=author_live
+network-inspect:
+    docker network inspect backer_local_nw
+
+banker-db:
+	docker compose -f local.yml exec postgres psql --username=alisultani --dbname=banker
 
 flake8:
 	docker compose -f local.yml exec api flake8 .

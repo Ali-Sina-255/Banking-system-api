@@ -6,11 +6,10 @@ services:
       dockerfile: ./docker/local/django/Dockerfile
     volumes:
       - .:/app:z
-      - static_volume:/app/staticfile
-      - media_volume:/app/mediafile
+      - ./staticfiles:/app/staticfiles
+      
     ports:
       - "8000:8000"
-      -
     env_file:
       - ./.env/.env.local
 
@@ -56,23 +55,6 @@ services:
 
     networks:
       - banker_local_nw
-
-
-  nginx:
-    restart: always
-    depends_on:
-      - api
-    volumes:
-      - static_volume:/app/staticfile
-      - media_volume:/app/mediafiles
-    build:
-      context: ./docker/local/nginx
-      dockerfile: Dockerfile
-    ports:
-      - '8080:80'
-    networks:
-      - author-api
-
 
 
 networks:
