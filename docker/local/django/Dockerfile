@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     libjpeg-dev
 
 # Copy the entire requirement directory into the image
-COPY ./requirement/ .
+COPY ./requirement .
 
 # Ensure the pip version is up-to-date
 RUN pip install --upgrade pip
@@ -23,7 +23,7 @@ RUN pip install --upgrade pip
 RUN pip wheel -v --wheel-dir /usr/src/app/wheels \
     -r ${BUILD_ENVIRONMENT}.txt
 
-# Final image
+# Final image               as run-stage
 FROM python:${PYTHON_VERSION} AS python-run-stage
 
 ARG BUILD_ENVIRONMENT=local
@@ -37,40 +37,40 @@ ENV BUILD_ENV=${BUILD_ENVIRONMENT}
 # Set the working directory
 WORKDIR ${APP_HOME}
 
+
 # Install runtime dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
+    sudo git bash-completion nano ssh \
     libpq-dev \
     gettext \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImport=false \
     && rm -rf /var/lib/apt/lists/*
 
+Run addgroup --system django && \
+    adduser --system --ingroup django django && \
+    mkdir - p${APP_HOME}/staticfiles && \
+    chown django:django ${APP_HOME}/staticfiles && \
+    chmod 775 ${APP_HOME}/staticfiles \
+
 # Copy wheels from the build stage
 COPY --from=python-build-stage /usr/src/app/wheels /wheels
+
 
 # Verify wheels are present and install packages from them
 RUN ls -alh /wheels  # To check the contents of /wheels
 RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
     && rm -rf /wheels/
 
-# Copy entrypoint script and make it executable
-COPY ./docker/local/django/entrypoint /entrypoint
-RUN sed -i 's/\r$//g' /entrypoint
-RUN chmod +x /entrypoint
+# Copy entrypoint.sh script and make it executable
+COPY --chown=django:django ./docker/local/django/entrypoint.sh /entrypoint.sh
+COPY --chown=django:django ./docker/local/django/start.sh /start.sh
+RUN sed -i 's/\r$//g' /entrypoint.sh.sh /start.sh && \
+    chmod +x /entrypoint.sh.sh /start.sh
 
-# Copy start script and make it executable
-COPY ./docker/local/django/start /start
-RUN sed -i 's/\r$//g' /start
-RUN chmod +x /start
 
-COPY ./docker/local/django/celery/worker/start /scripts/start-celeryworker
-RUN sed -i 's/\r$//g' /scripts/start-celeryworker
-RUN chmod +x /scripts/start-celeryworker
+COPY --chown=django:django . ${APP_HOME}
 
-COPY ./docker/local/django/celery/flower/start /scripts/start-flower
-RUN sed -i 's/\r$//g' /scripts/start-flower
-RUN chmod +x /scripts/start-flower
+USER django
 
-# Copy the application code
-COPY . ${APP_HOME}
 
-ENTRYPOINT ["/entrypoint"]
+ENTRYPOINT ["/entrypoint.sh"]
