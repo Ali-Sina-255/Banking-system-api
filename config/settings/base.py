@@ -1,3 +1,4 @@
+from datetime import timedelta
 from os import getenv, path
 from pathlib import Path
 
@@ -14,10 +15,6 @@ if path.isfile(local_env_file):
     load_dotenv(local_env_file)
 else:
     logger.warning(f".env.local file not found at {local_env_file}")
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
 
 # Application definition
 DJANGO_APPS = [
@@ -59,7 +56,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [str(APPS_DIRS / "templates")],
+        "DIRS": [str(BASE_DIR / "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

@@ -1,0 +1,17 @@
+
+{% extends "base.html" %}
+{% block title %}
+    Your login OTP
+{% endblock title %}
+{% block content %}
+
+    <h2>Your One-Time Password! </h2>
+    <p>Your OPT is <strong>{{otp}}</strong></p>
+
+    <p>This OPT will expire  <strong>{{expire_time}} minutes.</strong> </p>
+    <p>if you didn't request this OTP during login , please ignore this  email and contact  our support team immediately.</p>
+    <p>Best Regards,</p>
+    <p><strong>The {{site_name}} Team.</strong></p>
+
+    
+{% endblock content %}
