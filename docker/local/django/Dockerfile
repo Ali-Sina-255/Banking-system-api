@@ -39,6 +39,7 @@ WORKDIR ${APP_HOME}
 
 
 # Install runtime dependencies
+# Install runtime dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
     sudo git bash-completion nano ssh \
     libpq-dev \
@@ -46,31 +47,30 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImport=false \
     && rm -rf /var/lib/apt/lists/*
 
-Run addgroup --system django && \
+# Add django user, set permissions
+RUN addgroup --system django && \
     adduser --system --ingroup django django && \
-    mkdir - p${APP_HOME}/staticfiles && \
+    mkdir -p ${APP_HOME}/staticfiles && \
     chown django:django ${APP_HOME}/staticfiles && \
-    chmod 775 ${APP_HOME}/staticfiles \
+    chmod 775 ${APP_HOME}/staticfiles
 
 # Copy wheels from the build stage
 COPY --from=python-build-stage /usr/src/app/wheels /wheels
 
+# Install packages from wheels
+RUN ls -alh /wheels && \
+    pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* && \
+    rm -rf /wheels/
 
-# Verify wheels are present and install packages from them
-RUN ls -alh /wheels  # To check the contents of /wheels
-RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
-    && rm -rf /wheels/
-
-# Copy entrypoint.sh script and make it executable
+# Copy scripts and set permissions
 COPY --chown=django:django ./docker/local/django/entrypoint.sh /entrypoint.sh
 COPY --chown=django:django ./docker/local/django/start.sh /start.sh
-RUN sed -i 's/\r$//g' /entrypoint.sh.sh /start.sh && \
-    chmod +x /entrypoint.sh.sh /start.sh
+RUN sed -i 's/\r$//g' /entrypoint.sh /start.sh && \
+    chmod +x /entrypoint.sh /start.sh
 
-
+# Copy project files
 COPY --chown=django:django . ${APP_HOME}
 
+# Set user and entrypoint
 USER django
-
-
 ENTRYPOINT ["/entrypoint.sh"]

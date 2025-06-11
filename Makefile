@@ -32,13 +32,16 @@ collectstatic:
 superuser:
 	docker compose -f local.yml run --rm api python manage.py createsuperuser
 
-flash:
-    docker compose -f local.yml run --rm api python manage.py flash
+
 volume:
 	docker volume inspect author-havin-clone-api_local_postgres_data
 
+flash:
+	docker compose -f local.yml run --rm api python manage.py flash
+
 network-inspect:
-    docker network inspect backer_local_nw
+	docker network inspect bancker_local_nw
+
 
 banker-db:
 	docker compose -f local.yml exec postgres psql --username=alisultani --dbname=banker
