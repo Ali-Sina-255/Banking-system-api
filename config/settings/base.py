@@ -2,6 +2,7 @@ from datetime import timedelta
 from os import getenv, path
 from pathlib import Path
 
+from django.conf.global_settings import AUTH_USER_MODEL
 from dotenv import load_dotenv
 from loguru import logger
 
@@ -129,6 +130,7 @@ STATIC_ROOT = str(BASE_DIR / "staticfiles")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+AUTH_USER_MODEL = "apps.user_auth"
 
 LOGGING_CONFIG = None
 LOGURU_LOGGING = {
