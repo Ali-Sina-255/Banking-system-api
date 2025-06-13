@@ -6,6 +6,14 @@ from .models import User
 from .forms import UserChangeForm, UserCreationForm
 
 
+
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from django.utils.translation import gettext_lazy as _
+from .models import User
+from .forms import UserChangeForm, UserCreationForm
+
+
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     ordering = ["email"]
@@ -13,7 +21,6 @@ class CustomUserAdmin(UserAdmin):
     add_form = UserCreationForm
     model = User
     list_display = [
-        "pkid",
         "id",
         "email",
         "first_name",
@@ -23,12 +30,12 @@ class CustomUserAdmin(UserAdmin):
         "role",
     ]
     list_filter = ["email", "is_staff", "is_active"]
-    list_display_links = ["pkid", "id", "email"]
+    list_display_links = [ "id", "email"]
     fieldsets = (
         (_("Login Credentials"), {"fields": ("username", "email", "password")}),
         (
             _("Personal Info"),
-            {"fields": ("first_name", "middel_name", "last_name", "id_no", "role")},
+            {"fields": ("first_name", "middle_name", "last_name", "id_no", "role")},
         ),
         (
             _("Account Status. "),
@@ -44,8 +51,8 @@ class CustomUserAdmin(UserAdmin):
             _("Security and Groups"),
             {
                 "fields": (
-                    "security_questions",
-                    "security_answers",
+                    "security_question",
+                    "security_answer",
                 )
             },
         ),
@@ -66,27 +73,3 @@ class CustomUserAdmin(UserAdmin):
             {"fields": ("last_login", "date_joined")},
         ),
     )
-
-
-class UserAdmin(UserAdmin):
-
-    add_fieldsets = (
-        (
-            None,
-            {
-                "classes": ("wide",),
-                "fields": (
-                    "email",
-                    "first_name",
-                    "last_name",
-                    "password1",
-                    "password2",
-                ),
-            },
-        ),
-    )
-
-    search_fields = ["email", "first_name", "last_name"]
-
-
-admin.site.register(User, UserAdmin)

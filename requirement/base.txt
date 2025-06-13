@@ -1,11 +1,9 @@
-django
 django-environ
 djangorestframework
 django-cors-headers
 django-filter
 django-autoslug
 django-countries
-
 django-phonenumber-field
 phonenumbers
 drf-yasg
@@ -16,12 +14,10 @@ redis
 celery
 flower
 django-celery-email
-django-celery-bit
 python-dateutil
 dj-rest-auth
 django-allauth
 djangorestframework-simplejwt
-
 loguru
 python-dotenv
 drf-spectacular
