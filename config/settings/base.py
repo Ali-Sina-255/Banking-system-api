@@ -50,6 +50,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'apps.user_auth.middleware.CustomHeadersMiddleware',
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -111,6 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
+
 TIME_ZONE = "UTC"
 
 USE_I18N = True
@@ -132,6 +134,39 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "apps.user_auth"
 
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.schemas.openapi.AutoSchema",
+}
+
+SPECTACULAR_DEFAULTS = {
+    "TITLE": "NEXTGEN bank API",
+    "DESCRIPTION": "an build for a banking system",
+    "VERSION": "0.0.1",
+    "LICENSE": "MIT",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
+# celery config
+
+
+if USE_TZ:
+    CELERY_TIMEZONE = TIME_ZONE
+
+CELERY_BROKER_URL = getenv("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = getenv("CELERY_RESULT_BACKEND")
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_RESULT_BACKEND_MAX_RETRIES = 10
+CELERY_TASK_SEND_SENT_EVENTS = True
+CELERY_RESULT_EXTENDED = True
+CELERY_RESULT_BACKEND_ALWAYS_RETRY = True
+CELERY_TASK_TIME_LIMIT = 5 * 60
+CELERY_TASK_SOFT_TIME_LIMIT = 60
+CELERY_BEAT_SCHEDULE = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_WORKER_SEND_TASK_EVENTS = True
+
+
+# loguru configuration
 LOGGING_CONFIG = None
 LOGURU_LOGGING = {
     "handlers": [

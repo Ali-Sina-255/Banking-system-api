@@ -11,3 +11,4 @@ class TestLoggingView(View):
         logger.error("this is a error message")
         logger.critical("this is a critical message")
         return JsonResponse({"message": "we are testing logging with loguru"})
+
