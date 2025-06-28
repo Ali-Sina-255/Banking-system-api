@@ -1,10 +1,12 @@
-from datetime import timedelta
+from datetime import timedelta,date
 from os import getenv, path
 from pathlib import Path
 
 from django.conf.global_settings import AUTH_USER_MODEL
 from dotenv import load_dotenv
 from loguru import logger
+import cloudinary
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
@@ -165,6 +167,23 @@ CELERY_TASK_SOFT_TIME_LIMIT = 60
 CELERY_BEAT_SCHEDULE = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_WORKER_SEND_TASK_EVENTS = True
 
+# cloudinary settings
+
+CLOUDINARY_CLOUD_NAME = getenv("CLOUDINARY_CLOUD_NAME")
+CLOUDINARY_API_KEY = getenv("CLOUDINARY_API_KEY")
+CLOUDINARY_API_SECRET = getenv("CLOUDINARY_API_SECRET")
+cloudinary.config(
+    cloud_name=CLOUDINARY_CLOUD_NAME,
+    cloud_key=CLOUDINARY_API_KEY,
+    cloud_secret=CLOUDINARY_API_SECRET,
+)
+
+# birthday
+DEFAULT_BIRTHDAY = date(1900, 1, 1)
+DEFAULT_DATE = date(2000, 1, 1)
+DEFAULT_EXPIRY_DATE = date(2024, 1, 1)
+DEFAULT_COUNTRY = 'AF'
+DEFAULT_PHONE_NUMBER = "+93744355700"
 
 # loguru configuration
 LOGGING_CONFIG = None
