@@ -1,11 +1,12 @@
+from datetime import timedelta
 from os import getenv, path
 
 from dotenv import load_dotenv
 
 from .base import *  # noqa
-from .base import APPS_DIRS
+from .base import BASE_DIR
 
-local_env_file = path.join(BASE_DIR, ".vens", ".env.local")
+local_env_file = path.join(BASE_DIR, ".ven", ".env.local")
 if path.isfile(local_env_file):
     load_dotenv(local_env_file)
 

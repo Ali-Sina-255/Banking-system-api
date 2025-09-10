@@ -1,7 +1,7 @@
 from django.http import JsonResponse
-
 from django.views import View
 from loguru import logger
+
 
 class TestLoggingView(View):
     def get(self, request):
@@ -11,4 +11,3 @@ class TestLoggingView(View):
         logger.error("this is a error message")
         logger.critical("this is a critical message")
         return JsonResponse({"message": "we are testing logging with loguru"})
-

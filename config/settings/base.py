@@ -1,18 +1,17 @@
-from datetime import timedelta,date
+from datetime import date, timedelta
 from os import getenv, path
 from pathlib import Path
 
+import cloudinary
 from django.conf.global_settings import AUTH_USER_MODEL
 from dotenv import load_dotenv
 from loguru import logger
-import cloudinary
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 APPS_DIRS = BASE_DIR / "apps"
 
-# Load environment variables from .env.local if it exists
+
 local_env_file = path.join(BASE_DIR, ".env", ".env.local")
 if path.isfile(local_env_file):
     load_dotenv(local_env_file)
@@ -52,7 +51,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'apps.user_auth.middleware.CustomHeadersMiddleware',
+    "apps.user_auth.middleware.CustomHeadersMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -114,7 +113,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-
 TIME_ZONE = "UTC"
 
 USE_I18N = True
@@ -137,7 +135,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "user_auth.User"
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SPECTACULAR_DEFAULTS = {
@@ -182,7 +180,7 @@ cloudinary.config(
 DEFAULT_BIRTHDAY = date(1900, 1, 1)
 DEFAULT_DATE = date(2000, 1, 1)
 DEFAULT_EXPIRY_DATE = date(2024, 1, 1)
-DEFAULT_COUNTRY = 'AF'
+DEFAULT_COUNTRY = "AF"
 DEFAULT_PHONE_NUMBER = "+93744355700"
 
 # loguru configuration

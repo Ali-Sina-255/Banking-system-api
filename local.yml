@@ -1,5 +1,4 @@
 services:
-
   api: &api
     build:
       context: .
@@ -7,37 +6,29 @@ services:
     volumes:
       - .:/app:z
       - ./staticfiles:/app/staticfiles
-      
     ports:
-    - "8006:8000"
+      - "8000:8000" # Expose only api on host port 8000
     env_file:
       - ./.env/.env.local
-
     depends_on:
       - postgres
       - mailpit
       - redis
       - rabbitmq
-
     command: /start.sh
-
     networks:
-      -  banker_local_nw
-
+      - banker_local_nw
 
   postgres:
     build:
       context: .
       dockerfile: ./docker/local/postgres/Dockerfile
-
     ports:
       - "5432:5432"
     volumes:
       - banker_local_db:/var/lib/postgresql/data
-
     env_file:
       - ./.env/.env.local
-
     networks:
       - banker_local_nw
 
@@ -53,14 +44,17 @@ services:
       MP_DATA_FILE: /data/mailpit.db
       MP_SMTP_ACCEPT_ANY: 1
       MP_SMIT_AUTH_ALLOW_INSECURE: 1
+    env_file:
+      - ./.env/.env.local
+
     networks:
       - banker_local_nw
 
   redis:
-      image: redis:7.0-alpine3.19
-      command: redis-server --appendonly yes
-      networks:
-        - banker_local_nw
+    image: redis:7.0-alpine3.19
+    command: redis-server --appendonly yes
+    networks:
+      - banker_local_nw
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -71,11 +65,11 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
       - rabbitmq_log:/var/log/rabbitmq
     networks:
-        - banker_local_nw
+      - banker_local_nw
 
   celeryworker:
     <<: *api
- 
+    ports: []
     command: /start-celeryworker.sh
 
   flower:
@@ -90,16 +84,13 @@ services:
     build:
       context: .
       dockerfile: ./docker/local/postgres/Dockerfile
-      
     command: /start-celerybeat.sh
     env_file:
       - ./.env/.env.local
-    
     depends_on:
       - redis
       - postgres
       - rabbitmq
-
     networks:
       - banker_local_nw
 
@@ -117,8 +108,6 @@ services:
       - api
     networks:
       - banker_local_nw
-
-
 
 networks:
   banker_local_nw:
