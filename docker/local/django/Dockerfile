@@ -19,8 +19,6 @@ COPY ./requirement/ .
 # Ensure the pip version is up-to-date
 RUN pip install --upgrade pip
 
-# Fix: Remove the problematic dependency from ${BUILD_ENVIRONMENT}.txt if needed
-# Ensure `django-celery-bit` is not listed in your requirements file, or replace with another compatible package.
 
 # Create wheels from the specified environment file
 RUN pip wheel -v --wheel-dir /usr/src/app/wheels -r ${BUILD_ENVIRONMENT}.txt
