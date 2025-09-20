@@ -118,7 +118,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
 @admin.register(NextOfKin)
 class NextOfKinAdmin(admin.ModelAdmin):
-    list_display = ["full_name", "id_photo", "signature_photo", "title", "profile"]
+    list_display = ["full_name", "title", "profile"]
     list_filter = ["is_primary", "relationship"]
     search_fields = ["first_name", "last_name", "profile__user__email"]
 

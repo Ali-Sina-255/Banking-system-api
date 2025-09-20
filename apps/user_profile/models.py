@@ -132,11 +132,10 @@ class Profile(TimeStampedModel):
         _("Employer State"), max_length=100, blank=True, null=True
     )
 
-    photo = models.CloudinaryField(_("Photo"), max_length=100, blank=True, null=True)
+    photo = CloudinaryField(_("Photo"), blank=True, null=True)
+
     photo_url = models.URLField(_("Photo URL"), blank=True, null=True)
-    id_photo = models.CloudinaryField(
-        _("ID Photo"), max_length=100, blank=True, null=True
-    )
+    id_photo = CloudinaryField(_("ID Photo"), max_length=100, blank=True, null=True)
     id_photo_url = models.URLField(_("ID Photo URL"), blank=True, null=True)
 
     signature_photo = models.URLField(_("Signature Photo"), blank=True, null=True)
@@ -198,7 +197,7 @@ class NextOfKin(TimeStampedModel):
     title = models.CharField(_("Salutation"), max_length=5, choices=Salutation.choices)
     first_name = models.CharField(_("First Name"), max_length=50)
     last_name = models.CharField(_("Last Name"), max_length=50)
-    others_name = models.CharField(_("Other Name"), max_length=50)
+    other_name = models.CharField(_("Other Name"), max_length=50)
     date_of_birth = models.DateField(_("Date of Birth"), blank=True, null=True)
     gender = models.CharField(_("Gender"), max_length=10, default=Gender.choices)
     relationship = models.CharField(_("Relationship"), max_length=100)
