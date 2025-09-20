@@ -136,6 +136,8 @@ AUTH_USER_MODEL = "user_auth.User"
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": ["apps.common.cookie_auth.CookieAuthentication"],
+    "DEFAULT_PERMISSION_ClASSES": ["rest_framework.permission.IsAuthentication"],
 }
 
 SPECTACULAR_DEFAULTS = {
